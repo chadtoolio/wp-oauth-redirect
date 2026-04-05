@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 60px 20px; color: #333; }
+        .spinner { font-size: 24px; margin-bottom: 16px; }
+        .fallback { display: none; margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 8px; }
+        code { background: #e0e0e0; padding: 2px 6px; border-radius: 3px; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="spinner">Connecting to WorldPac Statement Reconciler...</div>
+    <p>Redirecting to your local app. This page will close automatically.</p>
+    <div class="fallback" id="fallback">
+        <p><strong>Automatic redirect failed.</strong></p>
+        <p>Copy this full URL and paste it into your app:</p>
+        <p><code id="url"></code></p>
+    </div>
+    <script>
+        // Grab the query string from Intuit's redirect and forward to localhost
+        var localUrl = 'http://localhost:8000/callback' + window.location.search;
+        // Try the redirect
+        var img = new Image();
+        img.onload = function() { window.location.href = localUrl; };
+        img.onerror = function() {
+            // localhost may not respond to image probe — just redirect anyway
+            window.location.href = localUrl;
+        };
+        // Redirect after a short delay to allow the page to render
+        setTimeout(function() {
+            window.location.href = localUrl;
+        }, 500);
+        // If still here after 4 seconds, show fallback
+        setTimeout(function() {
+            document.getElementById('fallback').style.display = 'block';
+            document.getElementById('url').textContent = localUrl;
+        }, 4000);
+    </script>
+</body>
+</html>
